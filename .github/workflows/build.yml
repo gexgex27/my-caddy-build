@@ -1,4 +1,4 @@
-name: Build Custom Caddy for Debian 11
+name: Build Custom Caddy
 
 on:
   schedule:
@@ -8,18 +8,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: golang:1.22-bullseye
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '>=1.25.1'
+          check-latest: true
 
       - name: Install xcaddy
         run: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
 
       - name: Build Caddy with plugins
+        env:
+          CGO_ENABLED: 0 
         run: |
-          xcaddy build \
+          ~/go/bin/xcaddy build \
             --with github.com/mholt/caddy-l4 \
             --with github.com/klzgrad/forwardproxy \
             --with github.com/caddyserver/replace-response
@@ -27,6 +33,6 @@ jobs:
       - name: Upload Binary as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: caddy-amd64
+          name: caddy-linux-amd64
           path: caddy
           retention-days: 35
