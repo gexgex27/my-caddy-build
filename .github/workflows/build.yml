@@ -27,8 +27,7 @@ jobs:
         run: |
           ~/go/bin/xcaddy build \
             --with github.com/mholt/caddy-l4 \
-            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive \
-            --with github.com/caddyserver/replace-response
+            --with github.com/caddyserver/forwardproxy=github.com/klzgrad/forwardproxy@naive
 
       - name: Upload Binary as Artifact
         uses: actions/upload-artifact@v4
